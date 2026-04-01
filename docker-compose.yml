@@ -13,7 +13,21 @@ services:
       - ./init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
       - ./seeder.sql:/docker-entrypoint-initdb.d/02-seeder.sql:ro
 
-  lang:
+  tcl:
+    image: tcl:8.6
+    container_name: legacy_tcl
+    volumes:
+      - ./legacy.tcl:/app/legacy.tcl
+    working_dir: /app
+    depends_on:
+      - db
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: legacy_payments
+      DB_USER: legacy_user
+      DB_PASSWORD: legacy_password
+    command: tclsh legacy.tcl
 
 volumes:
   postgres_data:
